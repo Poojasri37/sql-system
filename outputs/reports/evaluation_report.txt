@@ -1,0 +1,32 @@
+SQL Log Anomaly Detection Evaluation Report
+========================================
+Dataset: synthetic_sql_logs
+Data source: synthetic generated from workspace inspection; no SQL-specific dataset found
+Random state: 42
+Contamination: 0.08
+N_estimators: 300
+Train rows: 4900
+Test rows: 2100
+
+Accuracy: 0.9938
+Precision: 0.9641
+Recall: 0.9583
+F1-score: 0.9612
+False positive rate: 0.0031
+False negative rate: 0.0417
+ROC-AUC: 0.9993
+PR-AUC / Avg Precision: 0.9932
+
+Confusion matrix (rows: true, columns: predicted):
+[[1926    6]
+ [   7  161]]
+
+Classification report:
+              precision    recall  f1-score   support
+
+      normal       1.00      1.00      1.00      1932
+     anomaly       0.96      0.96      0.96       168
+
+    accuracy                           0.99      2100
+   macro avg       0.98      0.98      0.98      2100
+weighted avg       0.99      0.99      0.99      2100

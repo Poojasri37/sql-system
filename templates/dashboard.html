@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Anomaly Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+    <header class="topbar">
+        <div>
+            <h1>SQL Anomaly Dashboard</h1>
+            <p>Isolation Forest model monitoring</p>
+        </div>
+        <div class="topbar-actions">
+            <span class="user-pill">{{ username }}</span>
+            <a href="{{ url_for('logout') }}" class="secondary-link">Logout</a>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <section class="overview-grid">
+            <article class="card stat-card">
+                <span class="label">Accuracy</span>
+                <strong id="accuracy">{{ '%.4f' | format(metrics.accuracy) if metrics.accuracy is defined else 'N/A' }}</strong>
+            </article>
+            <article class="card stat-card">
+                <span class="label">Precision</span>
+                <strong id="precision">{{ '%.4f' | format(metrics.precision) if metrics.precision is defined else 'N/A' }}</strong>
+            </article>
+            <article class="card stat-card">
+                <span class="label">Recall</span>
+                <strong id="recall">{{ '%.4f' | format(metrics.recall) if metrics.recall is defined else 'N/A' }}</strong>
+            </article>
+            <article class="card stat-card">
+                <span class="label">F1</span>
+                <strong id="f1_score">{{ '%.4f' | format(metrics.f1_score) if metrics.f1_score is defined else 'N/A' }}</strong>
+            </article>
+        </section>
+
+        <section class="two-column">
+            <article class="card">
+                <h2>Single Event Prediction</h2>
+                <form id="predict-form">
+                    <div class="field-grid">
+                        <label>Timestamp<input name="timestamp" value="2024-03-10 03:15:00" /></label>
+                        <label>User<input name="user_id" value="user_12" /></label>
+                        <label>Database<input name="database_name" value="finance_db" /></label>
+                        <label>Query Type<select name="query_type"><option>SELECT</option><option>DELETE</option><option>UPDATE</option><option>INSERT</option><option>ALTER</option><option>MERGE</option></select></label>
+                        <label>Table<input name="table_name" value="financials" /></label>
+                        <label>Privilege<select name="privilege_level"><option>read</option><option>write</option><option>admin</option></select></label>
+                        <label>Query Length<input name="query_length" type="number" value="5000" /></label>
+                        <label>Rows Returned<input name="rows_returned" type="number" value="450000" /></label>
+                        <label>Duration ms<input name="duration_ms" type="number" value="20000" /></label>
+                        <label>Bytes Transferred<input name="bytes_transferred" type="number" value="2500000" /></label>
+                        <label>Join Tables<input name="num_join_tables" type="number" value="2" /></label>
+                        <label>Error Count<input name="error_count" type="number" value="3" /></label>
+                        <label>Success<input name="is_successful" type="number" value="0" /></label>
+                        <label>Query Frequency<input name="query_frequency" type="number" value="55" /></label>
+                        <label>After Hours<input name="after_hours" type="number" value="1" /></label>
+                        <label>Sensitive Table<input name="sensitive_table" type="number" value="1" /></label>
+                    </div>
+                    <button type="submit">Run Prediction</button>
+                </form>
+                <pre id="prediction-output" class="json-box">Waiting for prediction...</pre>
+            </article>
+
+            <article class="card">
+                <h2>Top Alerts</h2>
+                <ul class="alert-list">
+                    {% for alert in alerts %}
+                    <li>
+                        <span class="risk-badge risk-{{ (alert.risk_level|lower) }}">{{ alert.risk_level }}</span>
+                        <strong>{{ alert.user_id }}</strong>
+                        <span>{{ alert.query_type }} on {{ alert.table_name }}</span>
+                        <small>score: {{ '%.2f'|format(alert.risk_score|float) }}</small>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </article>
+        </section>
+
+        <section class="card">
+            <h2>Model Metadata</h2>
+            <dl class="metadata-list">
+                <div><dt>Model</dt><dd>{{ manifest.model_name }}</dd></div>
+                <div><dt>Version</dt><dd>{{ manifest.model_version }}</dd></div>
+                <div><dt>Training dataset</dt><dd>{{ manifest.training_dataset }}</dd></div>
+                <div><dt>Contamination</dt><dd>{{ manifest.evaluation_metrics.contamination if manifest.evaluation_metrics else 'N/A' }}</dd></div>
+            </dl>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

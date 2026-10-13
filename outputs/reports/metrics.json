@@ -1,0 +1,57 @@
+{
+  "dataset_name": "synthetic_sql_logs",
+  "data_source": "synthetic generated from workspace inspection; no SQL-specific dataset found",
+  "n_rows": 7000,
+  "n_anomalies": 560,
+  "n_normal": 6440,
+  "train_rows": 4900,
+  "test_rows": 2100,
+  "random_state": 42,
+  "contamination": 0.08,
+  "n_estimators": 300,
+  "accuracy": 0.9938095238095238,
+  "precision": 0.9640718562874252,
+  "recall": 0.9583333333333334,
+  "f1_score": 0.9611940298507463,
+  "false_positive_rate": 0.003105590062111801,
+  "false_negative_rate": 0.041666666666666664,
+  "roc_auc": 0.999275978507345,
+  "average_precision": 0.9932366957861747,
+  "confusion_matrix": [
+    [
+      1926,
+      6
+    ],
+    [
+      7,
+      161
+    ]
+  ],
+  "classification_report": {
+    "normal": {
+      "precision": 0.9963786859803414,
+      "recall": 0.9968944099378882,
+      "f1-score": 0.9966364812419146,
+      "support": 1932.0
+    },
+    "anomaly": {
+      "precision": 0.9640718562874252,
+      "recall": 0.9583333333333334,
+      "f1-score": 0.9611940298507463,
+      "support": 168.0
+    },
+    "accuracy": 0.9938095238095238,
+    "macro avg": {
+      "precision": 0.9802252711338832,
+      "recall": 0.9776138716356109,
+      "f1-score": 0.9789152555463305,
+      "support": 2100.0
+    },
+    "weighted avg": {
+      "precision": 0.9937941396049081,
+      "recall": 0.9938095238095238,
+      "f1-score": 0.9938010851306213,
+      "support": 2100.0
+    }
+  }
+}

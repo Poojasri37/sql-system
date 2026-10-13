@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Anomaly Monitor | Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body class="auth-body">
+    <div class="auth-panel">
+        <div class="auth-header">
+            <h1>SQL Anomaly Monitor</h1>
+            <p>Secure SQL access anomaly detection</p>
+        </div>
+
+        {% if error %}
+        <div class="alert alert-error">{{ error }}</div>
+        {% endif %}
+
+        <form method="post" action="{{ url_for('login') }}">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" value="admin" required />
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" value="admin123" required />
+
+            <button type="submit">Sign In</button>
+        </form>
+
+        <div class="auth-meta">
+            <p>Demo accounts:</p>
+            <ul>
+                <li>admin / admin123</li>
+                <li>analyst / analyst123</li>
+            </ul>
+            <p class="muted">Model: {{ manifest.model_name }} ({{ manifest.model_version }})</p>
+        </div>
+    </div>
+</body>
+</html>

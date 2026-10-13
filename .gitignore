@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.crdownload
+
+# Local databases and downloaded archives are not project inputs.
+*.db
+*.tar.bz2
+
+# Unrelated or restricted workspace data.
+Anomaly Detection.ipynb
+CHECKSUMS-sha1.txt
+CHECKSUMS-sha256.txt
+SEI_Insider_README.txt
+cert_preprocessed_ml_comparison.csv
+feature_matrix_v1.parquet
