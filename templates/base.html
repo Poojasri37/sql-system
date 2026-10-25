@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f7fb" />
+    <title>{% block title %}SQL Sentinel{% endblock %} | SQL Sentinel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body class="dashboard-body" {% block body_attrs %}{% endblock %}>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="brand sidebar-brand" href="{{ url_for('dashboard') }}" aria-label="SQL Sentinel home">
+                <span class="brand-mark" aria-hidden="true">S</span>
+                <span>SQL Sentinel</span>
+            </a>
+
+            <div class="sidebar-workspace">
+                <span class="workspace-avatar" aria-hidden="true">D</span>
+                <span><strong>Database Security</strong><small>Workspace</small></span>
+                <span class="workspace-chevron" aria-hidden="true">⌄</span>
+            </div>
+
+            <nav class="sidebar-nav" aria-label="Main navigation">
+                <span class="nav-label">WORKSPACE</span>
+                <a class="nav-link{% if active_page == 'dashboard' %} active{% endif %}" href="{{ url_for('dashboard') }}" {% if active_page == 'dashboard' %}aria-current="page"{% endif %}>
+                    <span class="nav-icon" aria-hidden="true">▦</span> Overview
+                </a>
+                <a class="nav-link{% if active_page == 'analysis' %} active{% endif %}" href="{{ url_for('analysis') }}" {% if active_page == 'analysis' %}aria-current="page"{% endif %}>
+                    <span class="nav-icon" aria-hidden="true">⌁</span> Event analysis
+                </a>
+                <a class="nav-link{% if active_page == 'alerts' %} active{% endif %}" href="{{ url_for('alerts_page') }}" {% if active_page == 'alerts' %}aria-current="page"{% endif %}>
+                    <span class="nav-icon" aria-hidden="true">◉</span> Alerts
+                </a>
+
+                <span class="nav-label nav-label-spaced">INTELLIGENCE</span>
+                <a class="nav-link{% if active_page == 'recommendations' %} active{% endif %}" href="{{ url_for('recommendations') }}" {% if active_page == 'recommendations' %}aria-current="page"{% endif %}>
+                    <span class="nav-icon" aria-hidden="true">✳</span> Recommendations
+                    <span class="nav-new">TIPS</span>
+                </a>
+                <a class="nav-link{% if active_page == 'model' %} active{% endif %}" href="{{ url_for('model_insights') }}" {% if active_page == 'model' %}aria-current="page"{% endif %}>
+                    <span class="nav-icon" aria-hidden="true">⌗</span> Model insights
+                </a>
+            </nav>
+
+            <a class="sidebar-recommendation" href="{{ url_for('recommendations') }}">
+                <span class="recommendation-spark" aria-hidden="true">✦</span>
+                <span class="sidebar-recommendation-label">SECURITY TIP</span>
+                <strong>Review unusual access</strong>
+                <small>Pay extra attention to after-hours access to sensitive tables.</small>
+                <span class="recommendation-link">View recommendations <span aria-hidden="true">→</span></span>
+            </a>
+
+            <div class="sidebar-account">
+                <span class="avatar" aria-hidden="true">{{ username[0]|upper }}</span>
+                <span class="account-details"><strong>{{ username }}</strong><small>Signed in</small></span>
+                <a class="account-signout" href="{{ url_for('logout') }}" aria-label="Sign out">↗</a>
+            </div>
+        </aside>
+
+        <section class="app-main">
+            <header class="app-header">
+                <div class="breadcrumb"><span>SQL Sentinel</span><span aria-hidden="true">/</span><strong>{% block breadcrumb %}Overview{% endblock %}</strong></div>
+                <div class="header-right">
+                    <span class="environment-badge"><span class="status-dot"></span> Monitoring</span>
+                    <span class="header-divider" aria-hidden="true"></span>
+                    <span class="header-user">{{ username }}</span>
+                    <a class="header-logout" href="{{ url_for('logout') }}">Sign out</a>
+                </div>
+            </header>
+            <main class="dashboard">
+                {% block content %}{% endblock %}
+                <footer class="dashboard-footer">SQL Sentinel <span>·</span> SQL activity intelligence</footer>
+            </main>
+        </section>
+    </div>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

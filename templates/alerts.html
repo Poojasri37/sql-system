@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Alerts{% endblock %}
+{% block breadcrumb %}Alerts{% endblock %}
+{% block content %}
+<section class="page-intro">
+    <div><span class="eyebrow">WORKSPACE <span class="intro-slash">/</span> ALERTS</span><h1>Evaluation alerts</h1><p>Inspect generated anomaly predictions used to evaluate the model.</p></div>
+    <a class="button-primary intro-button" href="{{ url_for('analysis') }}">⌁ <span>Analyze an event</span></a>
+</section>
+
+<section class="panel overview-alerts">
+    <div class="panel-heading"><div><h2>Generated flagged activity</h2><p>{{ alerts|length }} highest-risk evaluation examples, ranked by risk score</p></div><span class="alert-count">{{ alerts|length }}</span></div>
+    {% if alerts %}
+    <div class="alert-table-wrap">
+        <table class="alert-table">
+            <thead><tr><th>Risk</th><th>User</th><th>Activity</th><th>Database</th><th>Score</th></tr></thead>
+            <tbody>
+                {% for alert in alerts %}
+                <tr>
+                    <td><span class="risk-badge risk-{{ alert.risk_level|lower }}">{{ alert.risk_level }}</span></td>
+                    <td class="table-primary">{{ alert.user_id }}</td>
+                    <td>{{ alert.query_type }} <span class="table-muted">on</span> {{ alert.table_name }}</td>
+                    <td>{{ alert.database_name }}</td>
+                    <td class="table-score">{{ '%.1f'|format(alert.risk_score|float) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state"><span class="empty-state-icon" aria-hidden="true">✓</span><strong>No priority alerts</strong><p>No anomaly predictions were found in the current evaluation data.</p></div>
+    {% endif %}
+    <div class="data-notice"><span aria-hidden="true">ⓘ</span> These records come from the project’s synthetic evaluation dataset, not a live database feed. Enter an actual event under Event analysis to score its details.</div>
+</section>
+{% endblock %}

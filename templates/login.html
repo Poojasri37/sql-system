@@ -3,38 +3,72 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SQL Anomaly Monitor | Login</title>
+    <meta name="theme-color" content="#f5f7fb" />
+    <title>Sign in | SQL Sentinel</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 </head>
 <body class="auth-body">
-    <div class="auth-panel">
-        <div class="auth-header">
-            <h1>SQL Anomaly Monitor</h1>
-            <p>Secure SQL access anomaly detection</p>
-        </div>
+    <main class="auth-layout">
+        <section class="auth-story" aria-label="SQL Sentinel overview">
+            <a class="brand brand-light" href="{{ url_for('login') }}" aria-label="SQL Sentinel home">
+                <span class="brand-mark" aria-hidden="true">S</span>
+                <span>SQL Sentinel</span>
+            </a>
+            <div class="story-content">
+                <span class="eyebrow"><span class="status-dot"></span> DATABASE SECURITY MONITORING</span>
+                <h1>See the signal<br />in your SQL activity.</h1>
+                <p>Understand unusual access patterns, investigate high-risk events, and keep your data activity in view.</p>
+                <div class="story-points">
+                    <div class="story-point">
+                        <span class="point-icon" aria-hidden="true">⌁</span>
+                        <span><strong>Behavior-aware detection</strong><small>Surface activity that deviates from expected patterns.</small></span>
+                    </div>
+                    <div class="story-point">
+                        <span class="point-icon" aria-hidden="true">↗</span>
+                        <span><strong>Actionable risk context</strong><small>Review a score and the signals behind each prediction.</small></span>
+                    </div>
+                </div>
+            </div>
+            <div class="story-footer">
+                <span>SQL activity intelligence</span>
+                <span>Privacy-first workspace</span>
+            </div>
+        </section>
 
-        {% if error %}
-        <div class="alert alert-error">{{ error }}</div>
-        {% endif %}
+        <section class="auth-main">
+            <div class="auth-card">
+                <div class="auth-card-heading">
+                    <span class="brand-mark brand-mark-small" aria-hidden="true">S</span>
+                    <span class="eyebrow">WELCOME BACK</span>
+                    <h2>Sign in to your workspace</h2>
+                    <p>Enter your account details to continue.</p>
+                </div>
 
-        <form method="post" action="{{ url_for('login') }}">
-            <label for="username">Username</label>
-            <input id="username" name="username" type="text" value="admin" required />
+                {% if error %}
+                <div class="alert alert-error" role="alert">{{ error }}</div>
+                {% endif %}
 
-            <label for="password">Password</label>
-            <input id="password" name="password" type="password" value="admin123" required />
+                <form method="post" action="{{ url_for('login') }}" class="login-form">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text" autocomplete="username" placeholder="Enter your username" required autofocus />
 
-            <button type="submit">Sign In</button>
-        </form>
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required />
 
-        <div class="auth-meta">
-            <p>Demo accounts:</p>
-            <ul>
-                <li>admin / admin123</li>
-                <li>analyst / analyst123</li>
-            </ul>
-            <p class="muted">Model: {{ manifest.model_name }} ({{ manifest.model_version }})</p>
-        </div>
-    </div>
+                    <button type="submit" class="button-primary">Sign in <span aria-hidden="true">→</span></button>
+                </form>
+
+                <div class="auth-assurance">
+                    <span class="lock-icon" aria-hidden="true">●</span>
+                    <span>Your session is protected with secure authentication.</span>
+                </div>
+                <div class="auth-register-row">
+                    <span>New to SQL Sentinel?</span>
+                    <a class="button-secondary" href="{{ url_for('register') }}">Register</a>
+                </div>
+            </div>
+            <footer class="auth-footer">SQL Sentinel <span>·</span> SQL activity intelligence</footer>
+        </section>
+    </main>
 </body>
 </html>

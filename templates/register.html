@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f7fb" />
+    <title>Create account | SQL Sentinel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body class="auth-body">
+    <main class="auth-layout">
+        <section class="auth-story" aria-label="SQL Sentinel overview">
+            <a class="brand brand-light" href="{{ url_for('login') }}" aria-label="SQL Sentinel home">
+                <span class="brand-mark" aria-hidden="true">S</span><span>SQL Sentinel</span>
+            </a>
+            <div class="story-content">
+                <span class="eyebrow"><span class="status-dot"></span> DATABASE SECURITY MONITORING</span>
+                <h1>Start with a clearer view of SQL activity.</h1>
+                <p>Create a workspace account to explore anomaly detection, event analysis, and practical monitoring guidance.</p>
+                <div class="story-points">
+                    <div class="story-point"><span class="point-icon" aria-hidden="true">⌁</span><span><strong>Analyze activity</strong><small>Assess SQL events and understand risk signals.</small></span></div>
+                    <div class="story-point"><span class="point-icon" aria-hidden="true">✳</span><span><strong>Explore recommendations</strong><small>Find practical ways to strengthen database monitoring.</small></span></div>
+                </div>
+            </div>
+            <div class="story-footer"><span>SQL activity intelligence</span><span>Privacy-first workspace</span></div>
+        </section>
+        <section class="auth-main">
+            <div class="auth-card">
+                <div class="auth-card-heading">
+                    <span class="brand-mark brand-mark-small" aria-hidden="true">S</span>
+                    <span class="eyebrow">GET STARTED</span>
+                    <h2>Create your account</h2>
+                    <p>Set up your SQL Sentinel workspace access.</p>
+                </div>
+                {% if error %}<div class="alert alert-error" role="alert">{{ error }}</div>{% endif %}
+                <form method="post" action="{{ url_for('register') }}" class="login-form">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text" autocomplete="username" minlength="3" maxlength="32" pattern="[A-Za-z0-9_]{3,32}" placeholder="Choose a username" required autofocus />
+                    <small class="field-hint">3–32 letters, numbers, or underscores.</small>
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Create a password" required />
+                    <label for="confirm_password">Confirm password</label>
+                    <input id="confirm_password" name="confirm_password" type="password" autocomplete="new-password" minlength="8" placeholder="Enter your password again" required />
+                    <button type="submit" class="button-primary">Create account <span aria-hidden="true">→</span></button>
+                </form>
+                <div class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Sign in</a></div>
+            </div>
+            <footer class="auth-footer">SQL Sentinel <span>·</span> SQL activity intelligence</footer>
+        </section>
+    </main>
+</body>
+</html>

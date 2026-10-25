@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Model insights{% endblock %}
+{% block breadcrumb %}Model insights{% endblock %}
+{% block content %}
+<section class="page-intro">
+    <div><span class="eyebrow">INTELLIGENCE <span class="intro-slash">/</span> MODEL INSIGHTS</span><h1>Know your detection model.</h1><p>Review model details and the evaluation metrics behind its predictions.</p></div>
+    <span class="model-type model-type-large">ISOLATION FOREST</span>
+</section>
+
+<section class="model-summary panel">
+    <div class="model-summary-mark" aria-hidden="true">⌗</div>
+    <div class="model-summary-copy"><span class="eyebrow">CURRENT DETECTOR</span><h2>{{ manifest.model_name }}</h2><p>Version {{ manifest.model_version }} · trained on {{ manifest.training_dataset }}</p></div>
+    <span class="live-badge"><span class="status-dot"></span> ACTIVE</span>
+</section>
+
+<section class="section-block model-metrics-block">
+    <div class="section-heading"><div><h2>Evaluation metrics</h2><p>Reported on the synthetic evaluation dataset</p></div></div>
+    <div class="overview-grid">
+        <article class="metric-card"><div class="metric-top"><span class="metric-label">Accuracy</span><span class="metric-icon icon-blue" aria-hidden="true">◉</span></div><strong>{{ '%.1f%%'|format(metrics.accuracy * 100) if metrics.accuracy is defined else 'N/A' }}</strong><small>Overall correct predictions</small></article>
+        <article class="metric-card"><div class="metric-top"><span class="metric-label">Precision</span><span class="metric-icon icon-violet" aria-hidden="true">◎</span></div><strong>{{ '%.1f%%'|format(metrics.precision * 100) if metrics.precision is defined else 'N/A' }}</strong><small>Alerts correctly identified</small></article>
+        <article class="metric-card"><div class="metric-top"><span class="metric-label">Recall</span><span class="metric-icon icon-amber" aria-hidden="true">↗</span></div><strong>{{ '%.1f%%'|format(metrics.recall * 100) if metrics.recall is defined else 'N/A' }}</strong><small>Anomalies successfully detected</small></article>
+        <article class="metric-card"><div class="metric-top"><span class="metric-label">F1 score</span><span class="metric-icon icon-green" aria-hidden="true">✳</span></div><strong>{{ '%.1f%%'|format(metrics.f1_score * 100) if metrics.f1_score is defined else 'N/A' }}</strong><small>Precision and recall balance</small></article>
+    </div>
+</section>
+
+<section class="panel model-panel">
+    <div class="panel-heading"><div><h2>Model details</h2><p>Training provenance and detector configuration</p></div></div>
+    <dl class="metadata-list">
+        <div><dt>Model name</dt><dd>{{ manifest.model_name }}</dd></div>
+        <div><dt>Version</dt><dd>{{ manifest.model_version }}</dd></div>
+        <div><dt>Training dataset</dt><dd>{{ manifest.training_dataset }}</dd></div>
+        <div><dt>Contamination</dt><dd>{{ manifest.evaluation_metrics.contamination if manifest.evaluation_metrics else 'N/A' }}</dd></div>
+        <div><dt>Training timestamp</dt><dd>{{ manifest.training_timestamp }}</dd></div>
+        <div><dt>Evaluation scope</dt><dd>Synthetic SQL activity</dd></div>
+    </dl>
+</section>
+<section class="guidance-banner model-caveat"><span class="guidance-banner-icon" aria-hidden="true">i</span><div><strong>Interpret metrics in context.</strong><p>The project uses synthetic data. These results are illustrative and do not establish expected performance on real production logs.</p></div></section>
+{% endblock %}

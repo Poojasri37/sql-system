@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Event analysis{% endblock %}
+{% block breadcrumb %}Event analysis{% endblock %}
+{% block content %}
+<section class="page-intro">
+    <div><span class="eyebrow">WORKSPACE <span class="intro-slash">/</span> EVENT ANALYSIS</span><h1>Analyze SQL activity.</h1><p>Enter an actual event’s details to assess anomaly and risk signals.</p></div>
+    <div class="model-status"><span class="status-check" aria-hidden="true">✓</span><span><strong>Detection model active</strong><small>Isolation Forest · ready for analysis</small></span></div>
+</section>
+
+<div class="analysis-layout">
+    <section class="panel prediction-panel">
+        <div class="panel-heading">
+            <div class="panel-title-group"><span class="panel-icon" aria-hidden="true">⌁</span><div><h2>Event details</h2><p>Provide the activity attributes you want to assess.</p></div></div>
+            <span class="live-badge"><span class="status-dot"></span> READY</span>
+        </div>
+        <form id="predict-form">
+            <div class="form-section-label">EVENT DETAILS</div>
+            <div class="field-grid">
+                <label>Timestamp<input name="timestamp" type="datetime-local" required /></label>
+                <label>User ID<input name="user_id" placeholder="Enter the event user ID" required /></label>
+                <label>Database<input name="database_name" placeholder="Enter the database name" required /></label>
+                <label>Query type<select name="query_type" required><option value="" selected disabled>Select query type</option><option>SELECT</option><option>DELETE</option><option>UPDATE</option><option>INSERT</option><option>ALTER</option><option>MERGE</option></select></label>
+                <label>Table<input name="table_name" placeholder="Enter the table name" required /></label>
+                <label>Privilege level<select name="privilege_level" required><option value="" selected disabled>Select privilege</option><option value="read">Read</option><option value="write">Write</option><option value="admin">Admin</option></select></label>
+            </div>
+            <div class="form-section-label form-section-spaced">ACTIVITY SIGNALS</div>
+            <div class="field-grid">
+                <label>Query length<input name="query_length" type="number" min="0" placeholder="Characters" required /></label>
+                <label>Rows returned<input name="rows_returned" type="number" min="0" placeholder="Row count" required /></label>
+                <label>Duration (ms)<input name="duration_ms" type="number" min="0" placeholder="Milliseconds" required /></label>
+                <label>Bytes transferred<input name="bytes_transferred" type="number" min="0" placeholder="Bytes" required /></label>
+                <label>Joined tables<input name="num_join_tables" type="number" min="0" placeholder="Table count" required /></label>
+                <label>Error count<input name="error_count" type="number" min="0" placeholder="Error count" required /></label>
+                <label>Query frequency<input name="query_frequency" type="number" min="0" placeholder="User query frequency" required /></label>
+                <label>Successful<select name="is_successful" required><option value="" selected disabled>Select result</option><option value="1">Yes</option><option value="0">No</option></select></label>
+                <label>Sensitive table<select name="sensitive_table" required><option value="" selected disabled>Select sensitivity</option><option value="0">No</option><option value="1">Yes</option></select></label>
+            </div>
+            <div class="form-actions">
+                <span id="event-source">No sample values are prefilled. Load a workspace record or enter an event; after-hours is derived from the timestamp.</span>
+                <div class="form-action-buttons">
+                    <button type="button" class="button-secondary" id="load-dataset-event">Load dataset record</button>
+                    <button type="submit" class="button-primary" id="predict-button"><span aria-hidden="true">⌁</span> Analyze event</button>
+                </div>
+            </div>
+        </form>
+        <pre id="prediction-output" class="prediction-result json-result" aria-live="polite">Prediction JSON will appear here after analysis.</pre>
+    </section>
+
+    <aside class="panel analysis-guide">
+        <span class="guide-icon" aria-hidden="true">✳</span>
+        <h2>What should I look for?</h2>
+        <p>The model assesses each event against activity patterns learned during training. Signals that can contribute to risk include:</p>
+        <ul class="guide-list">
+            <li><span>01</span> After-hours database access</li>
+            <li><span>02</span> Sensitive table activity</li>
+            <li><span>03</span> Unusually high row or byte volume</li>
+            <li><span>04</span> Repeated errors or query spikes</li>
+        </ul>
+        <a class="guide-link" href="{{ url_for('recommendations') }}">See monitoring recommendations <span aria-hidden="true">→</span></a>
+    </aside>
+</div>
+<div class="guidance-banner model-caveat"><span class="guidance-banner-icon" aria-hidden="true">i</span><div><strong>Workspace dataset and model training data are synthetic.</strong><p>Load a record from the project dataset or enter your own event. Scores are illustrative and are not a probability or a live database alert. Validate with authorized production logs before operational use.</p></div></div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='app.js', v='3') }}"></script>{% endblock %}

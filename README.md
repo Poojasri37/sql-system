@@ -41,11 +41,31 @@ retrain the model when serving predictions.
 2. Start the application:
    `python app.py`
 3. Open `http://127.0.0.1:5000/login`.
+4. Create a workspace account with **Register**, or use one of the
+   development-only demonstration accounts listed below.
 
 The demonstration login accounts are `admin` / `admin123` and `analyst` /
 `analyst123`. These are development-only credentials. Configure strong unique
 `SECRET_KEY` and `JWT_SECRET_KEY` values and replace the demonstration
 authentication before deploying this application.
+
+Registered accounts are stored in the local `users.db` SQLite database with
+password hashes. The workspace includes separate Overview, Event analysis,
+Alerts, Recommendations, and Model insights pages. Event analysis requires
+actual event values and does not prefill example records. Feature thresholds
+and risk-score calibration are derived from the model's training-data
+distribution; changing event values therefore changes the event features and
+score. **Load dataset record** fills the form from an actual row in
+`synthetic_sql_logs.csv`; the prediction response is shown as JSON. The
+Recommendations page provides local, rule-based chat guidance based on the
+latest analysis in the current browser tab; it does not call an external AI
+service. The local access-log databases are employee/file-access datasets, not
+SQL query logs, so they are not used for model training or presented as live
+SQL events. Use authorized SQL logs to retrain and validate the model before
+operational use.
+
+Evaluation metrics and the alert examples are based on synthetic data; they
+are not a live database feed. Recommendations are general guidance.
 
 The API provides `/api/health`, `/api/login`, `/api/metrics`, `/api/predict`,
 and `/api/recent-alerts`. Prediction requests use a JWT returned by `/api/login`.

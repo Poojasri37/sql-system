@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Recommendations{% endblock %}
+{% block breadcrumb %}Recommendations{% endblock %}
+{% block content %}
+<section class="page-intro">
+    <div><span class="eyebrow">INTELLIGENCE <span class="intro-slash">/</span> RECOMMENDATIONS</span><h1>Ask about your prediction.</h1><p>Get practical next steps based on your latest event analysis.</p></div>
+    <span class="recommendation-status"><span class="recommendation-spark" aria-hidden="true">✦</span> RULE-BASED GUIDANCE</span>
+</section>
+
+<section class="chat-layout">
+    <div class="panel chat-panel">
+        <div class="chat-heading">
+            <span class="chat-avatar" aria-hidden="true">S</span>
+            <span><strong>SQL Sentinel assistant</strong><small><span class="status-dot"></span> Local rules · no external AI service</small></span>
+            <span class="chat-context" id="chat-context">Waiting for an analysis</span>
+        </div>
+
+        <div class="chat-messages" id="chat-messages" role="log" aria-live="polite">
+            <article class="chat-message assistant-message">
+                <span class="chat-avatar chat-avatar-small" aria-hidden="true">S</span>
+                <div class="chat-bubble">
+                    <strong>Hi, I can help you review an event.</strong>
+                    <p>Run an analysis first and I’ll use its risk score and signals to suggest rule-based checks. I can also explain the general monitoring rules.</p>
+                </div>
+            </article>
+        </div>
+
+        <div class="quick-prompts" aria-label="Suggested questions">
+            <button type="button" data-question="Explain the latest risk score">Explain the risk score</button>
+            <button type="button" data-question="What should I check first?">What should I check first?</button>
+            <button type="button" data-question="Why was this event flagged?">Why was it flagged?</button>
+        </div>
+
+        <form class="chat-composer" id="chat-form">
+            <label class="visually-hidden" for="chat-input">Ask about the latest prediction</label>
+            <input id="chat-input" name="question" placeholder="Ask about the latest prediction…" autocomplete="off" required />
+            <button type="submit" aria-label="Send message">Send <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="chat-disclaimer">Guidance is generated from local rules and the latest prediction. It is not an incident verdict.</p>
+    </div>
+
+    <aside class="panel chat-side-panel">
+        <span class="guide-icon" aria-hidden="true">⌁</span>
+        <h2>How the guidance works</h2>
+        <p>The assistant checks the prediction’s risk level and reported signals, then matches them to practical review steps.</p>
+        <ul class="guide-list">
+            <li><span>01</span> Access outside usual hours</li>
+            <li><span>02</span> Sensitive data and privileges</li>
+            <li><span>03</span> Unusually large data transfers</li>
+            <li><span>04</span> Repeated errors or query spikes</li>
+        </ul>
+        <a class="guide-link" href="{{ url_for('analysis') }}">Go to event analysis <span aria-hidden="true">→</span></a>
+        <div class="chat-data-note"><strong>Dataset note</strong><p>The workspace model and its example records use synthetic SQL activity. Validate recommendations against your own authorized logs and access policies.</p></div>
+    </aside>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='recommendations.js', v='1') }}"></script>{% endblock %}

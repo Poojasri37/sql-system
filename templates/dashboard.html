@@ -1,96 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SQL Anomaly Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
-</head>
-<body>
-    <header class="topbar">
-        <div>
-            <h1>SQL Anomaly Dashboard</h1>
-            <p>Isolation Forest model monitoring</p>
-        </div>
-        <div class="topbar-actions">
-            <span class="user-pill">{{ username }}</span>
-            <a href="{{ url_for('logout') }}" class="secondary-link">Logout</a>
-        </div>
-    </header>
+{% extends "base.html" %}
+{% block title %}Overview{% endblock %}
+{% block breadcrumb %}Overview{% endblock %}
+{% block content %}
+<section class="page-intro">
+    <div>
+        <span class="eyebrow">SECURITY CENTER <span class="intro-slash">/</span> OVERVIEW</span>
+        <h1>Good to see you, {{ username }}.</h1>
+        <p>Your SQL activity at a glance. Review model performance and investigate flagged events.</p>
+    </div>
+    <div class="model-status">
+        <span class="status-check" aria-hidden="true">✓</span>
+        <span><strong>Detection model active</strong><small>{{ manifest.model_name }} · v{{ manifest.model_version }}</small></span>
+    </div>
+</section>
 
-    <main class="dashboard">
-        <section class="overview-grid">
-            <article class="card stat-card">
-                <span class="label">Accuracy</span>
-                <strong id="accuracy">{{ '%.4f' | format(metrics.accuracy) if metrics.accuracy is defined else 'N/A' }}</strong>
-            </article>
-            <article class="card stat-card">
-                <span class="label">Precision</span>
-                <strong id="precision">{{ '%.4f' | format(metrics.precision) if metrics.precision is defined else 'N/A' }}</strong>
-            </article>
-            <article class="card stat-card">
-                <span class="label">Recall</span>
-                <strong id="recall">{{ '%.4f' | format(metrics.recall) if metrics.recall is defined else 'N/A' }}</strong>
-            </article>
-            <article class="card stat-card">
-                <span class="label">F1</span>
-                <strong id="f1_score">{{ '%.4f' | format(metrics.f1_score) if metrics.f1_score is defined else 'N/A' }}</strong>
-            </article>
-        </section>
+<section class="guidance-banner data-provenance"><span class="guidance-banner-icon" aria-hidden="true">i</span><div><strong>Evaluation workspace — not connected to live SQL logs.</strong><p>Metrics and alert examples below come from generated evaluation data. Predictions analyze the event details you enter.</p></div></section>
 
-        <section class="two-column">
-            <article class="card">
-                <h2>Single Event Prediction</h2>
-                <form id="predict-form">
-                    <div class="field-grid">
-                        <label>Timestamp<input name="timestamp" value="2024-03-10 03:15:00" /></label>
-                        <label>User<input name="user_id" value="user_12" /></label>
-                        <label>Database<input name="database_name" value="finance_db" /></label>
-                        <label>Query Type<select name="query_type"><option>SELECT</option><option>DELETE</option><option>UPDATE</option><option>INSERT</option><option>ALTER</option><option>MERGE</option></select></label>
-                        <label>Table<input name="table_name" value="financials" /></label>
-                        <label>Privilege<select name="privilege_level"><option>read</option><option>write</option><option>admin</option></select></label>
-                        <label>Query Length<input name="query_length" type="number" value="5000" /></label>
-                        <label>Rows Returned<input name="rows_returned" type="number" value="450000" /></label>
-                        <label>Duration ms<input name="duration_ms" type="number" value="20000" /></label>
-                        <label>Bytes Transferred<input name="bytes_transferred" type="number" value="2500000" /></label>
-                        <label>Join Tables<input name="num_join_tables" type="number" value="2" /></label>
-                        <label>Error Count<input name="error_count" type="number" value="3" /></label>
-                        <label>Success<input name="is_successful" type="number" value="0" /></label>
-                        <label>Query Frequency<input name="query_frequency" type="number" value="55" /></label>
-                        <label>After Hours<input name="after_hours" type="number" value="1" /></label>
-                        <label>Sensitive Table<input name="sensitive_table" type="number" value="1" /></label>
-                    </div>
-                    <button type="submit">Run Prediction</button>
-                </form>
-                <pre id="prediction-output" class="json-box">Waiting for prediction...</pre>
-            </article>
+<section class="section-block" aria-labelledby="performance-title">
+    <div class="section-heading">
+        <div><h2 id="performance-title">Model performance</h2><p>Evaluation metrics on generated SQL activity</p></div>
+        <a class="section-link" href="{{ url_for('model_insights') }}">Explore model <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="overview-grid">
+        <article class="metric-card"><div class="metric-top"><span class="metric-label">Accuracy</span><span class="metric-icon icon-blue" aria-hidden="true">◉</span></div><strong>{{ '%.1f%%' | format(metrics.accuracy * 100) if metrics.accuracy is defined else 'N/A' }}</strong><small>Overall correct predictions</small></article>
+        <article class="metric-card"><div class="metric-top"><span class="metric-label">Precision</span><span class="metric-icon icon-violet" aria-hidden="true">◎</span></div><strong>{{ '%.1f%%' | format(metrics.precision * 100) if metrics.precision is defined else 'N/A' }}</strong><small>Alerts correctly identified</small></article>
+        <article class="metric-card"><div class="metric-top"><span class="metric-label">Recall</span><span class="metric-icon icon-amber" aria-hidden="true">↗</span></div><strong>{{ '%.1f%%' | format(metrics.recall * 100) if metrics.recall is defined else 'N/A' }}</strong><small>Anomalies successfully detected</small></article>
+        <article class="metric-card"><div class="metric-top"><span class="metric-label">F1 score</span><span class="metric-icon icon-green" aria-hidden="true">✳</span></div><strong>{{ '%.1f%%' | format(metrics.f1_score * 100) if metrics.f1_score is defined else 'N/A' }}</strong><small>Precision and recall balance</small></article>
+    </div>
+</section>
 
-            <article class="card">
-                <h2>Top Alerts</h2>
-                <ul class="alert-list">
-                    {% for alert in alerts %}
-                    <li>
-                        <span class="risk-badge risk-{{ (alert.risk_level|lower) }}">{{ alert.risk_level }}</span>
-                        <strong>{{ alert.user_id }}</strong>
-                        <span>{{ alert.query_type }} on {{ alert.table_name }}</span>
-                        <small>score: {{ '%.2f'|format(alert.risk_score|float) }}</small>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </article>
-        </section>
+<section class="dashboard-shortcuts">
+    <a class="shortcut-card" href="{{ url_for('analysis') }}">
+        <span class="shortcut-icon icon-blue" aria-hidden="true">⌁</span>
+        <span><strong>Analyze an event</strong><small>Assess a SQL activity record for risk.</small></span>
+        <span class="shortcut-arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="shortcut-card" href="{{ url_for('alerts_page') }}">
+        <span class="shortcut-icon icon-amber" aria-hidden="true">◉</span>
+        <span><strong>Evaluation alerts</strong><small>{{ alerts|length }} generated examples. These are not live database events.</small></span>
+        <span class="shortcut-arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="shortcut-card" href="{{ url_for('recommendations') }}">
+        <span class="shortcut-icon icon-violet" aria-hidden="true">✳</span>
+        <span><strong>Security recommendations</strong><small>Practical steps to strengthen SQL monitoring.</small></span>
+        <span class="shortcut-arrow" aria-hidden="true">→</span>
+    </a>
+</section>
 
-        <section class="card">
-            <h2>Model Metadata</h2>
-            <dl class="metadata-list">
-                <div><dt>Model</dt><dd>{{ manifest.model_name }}</dd></div>
-                <div><dt>Version</dt><dd>{{ manifest.model_version }}</dd></div>
-                <div><dt>Training dataset</dt><dd>{{ manifest.training_dataset }}</dd></div>
-                <div><dt>Contamination</dt><dd>{{ manifest.evaluation_metrics.contamination if manifest.evaluation_metrics else 'N/A' }}</dd></div>
-            </dl>
-        </section>
-    </main>
-
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
-</body>
-</html>
+<section class="panel overview-alerts">
+    <div class="panel-heading">
+        <div><h2>Evaluation alert examples</h2><p>Generated model evaluation results — not a live alert feed</p></div>
+        <a class="section-link" href="{{ url_for('alerts_page') }}">View all <span aria-hidden="true">→</span></a>
+    </div>
+    {% if alerts %}
+    <div class="alert-table-wrap">
+        <table class="alert-table">
+            <thead><tr><th>Risk</th><th>User</th><th>Activity</th><th>Risk score</th></tr></thead>
+            <tbody>
+                {% for alert in alerts[:5] %}
+                <tr>
+                    <td><span class="risk-badge risk-{{ alert.risk_level|lower }}">{{ alert.risk_level }}</span></td>
+                    <td class="table-primary">{{ alert.user_id }}</td>
+                    <td>{{ alert.query_type }} <span class="table-muted">on</span> {{ alert.table_name }}</td>
+                    <td class="table-score">{{ '%.0f'|format(alert.risk_score|float) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state compact-empty"><span class="empty-state-icon" aria-hidden="true">✓</span><strong>No priority alerts</strong><p>There are no flagged events in the current evaluation.</p></div>
+    {% endif %}
+    <div class="data-notice"><span aria-hidden="true">ⓘ</span> Replace the generated dataset and retrain the model with authorized SQL logs before using these results operationally.</div>
+</section>
+{% endblock %}
